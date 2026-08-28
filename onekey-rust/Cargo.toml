@@ -1,0 +1,62 @@
+[package]
+name = "onekey"
+version = "2.0.0"
+edition = "2021"
+authors = ["ikun0014 (original Python author)", "Rust 重构作者"]
+description = "Onekey Steam Depot Manifest Downloader - Rust 现代化重构版"
+license = "GPL-2.0"
+repository = "https://github.com/ikunshare/Onekey"
+keywords = ["steam", "depot", "manifest", "downloader", "gui"]
+categories = ["command-line-utilities", "gui"]
+
+[dependencies]
+# HTTP 客户端
+reqwest = { version = "0.12", features = ["json", "rustls-tls-native-roots"], default-features = false }
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# 日志
+log = "0.4"
+env_logger = "0.11"
+colored = "2.1"
+
+# VDF 解析 (Valve Data Format)
+vdf = { package = "vdf-reader", version = "0.3" }
+
+# 错误处理
+anyhow = "1.0"
+thiserror = "2.0"
+
+# 日期时间
+chrono = { version = "0.4", features = ["serde"] }
+
+# 命令行交互
+dialoguer = "0.11"
+console = "0.15"
+async-trait = "0.1"
+
+# GUI - Iced (仅 Windows)
+[target.'cfg(windows)'.dependencies]
+winreg = "0.55"
+iced = { version = "0.13", features = ["tokio", "advanced"] }
+iced_aw = "0.11"
+# 注意：iced_fluent_theme 需要从 Codeberg 获取，如果无法访问可暂时注释掉
+# iced_fluent_theme = { git = "https://codeberg.org/frgp42/iced-fluent-theme.git" }
+
+[dev-dependencies]
+tokio-test = "0.4"
+tempfile = "3.10"
+
+[profile.release]
+opt-level = 3
+lto = true
+strip = true
+
+[[bin]]
+name = "onekey"
+path = "src/main.rs"
+
+[[bin]]
+name = "onekey-gui"
+path = "src/gui_main.rs"
